@@ -1,0 +1,118 @@
+<!-- 
+  Objective: To create a nested comment section using pure javascript, css and html.
+
+  TODO: Create nested comments and way to store them and populate as per the data provided.
+ -->
+
+
+ <!-- 
+
+  {
+    id: 1,
+    message: '',
+    // author: '',
+    parent: 0,
+  }
+
+  -->
+
+<html>
+<h1>Machine Coding Question 2</h1>
+
+<div id="0"></div>
+
+<template id="temp-form">
+  <div class="form">
+    <input />
+    <button>Submit</button>
+  </div>
+</template>
+
+<template id="temp-reply">
+  <div class="content">
+    <ul>
+      <li></li>
+      <div><button>Reply</button></div>
+    </ul>
+  </div>
+</template>
+
+</html>
+
+<style>
+  input, button {
+    padding: 8px 16px;
+    border-radius: 5px;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  ul > * {
+    width: fit-content;
+  }
+</style>
+
+<script>
+  const btnIds = [];
+
+  function createRandomID() {
+    while(true) {
+      const id = Math.ceil(Math.random() * 100000000000);
+      if (!btnIds.includes(id)) {
+        btnIds.push(id);
+        return id;
+      }
+    }
+  }
+
+  function createForm(id, root, isInit = false) {
+    const temp_form = document.querySelector("#temp-form").content.querySelector("div");
+    const form = temp_form.cloneNode(true);
+    form.setAttribute("id", "form_" + id);
+    form.querySelector("input").setAttribute("id", "input_" + id);
+    form.querySelector("button").setAttribute("id", "submit_" + id);
+    root.appendChild(form);
+
+    root.querySelector("#input_" + id).focus();
+    root.querySelector("#submit_" + id).addEventListener("click", function (e) {
+      if (!document.querySelector("#input_"+ id)?.value) return;
+      const comment = document.querySelector("#input_" + id)?.value;
+      document.querySelector("#input_" + id).value = '';
+
+      const temp_content = document.querySelector("#temp-reply").content.querySelector("div");
+      const content = temp_content.cloneNode(true);
+      content.querySelector("ul").querySelector("li").innerText = comment;
+
+      // create id
+      const randomReplyID = createRandomID();
+      content.querySelector("ul").querySelector("button").setAttribute("id", "reply_" + randomReplyID);
+
+      let parent = root;
+      if (!isInit) { // hide the form and display reply button
+        this.parentNode.style.display = "none";
+        document.querySelector("#reply_" + this.parentNode.getAttribute("id").split("_")[1]).style.display = "block";
+        
+        parent = root.parentNode;
+      }
+
+      parent.appendChild(content);
+
+      // add event listener for reply button
+      document.querySelector("#reply_" + randomReplyID).addEventListener("click", function (e) {
+        if (document.querySelector("#form_" + this.getAttribute("id").split("_")[1])) {
+          document.querySelector("#form_" + this.getAttribute("id").split("_")[1]).style.display = "block"
+        } else {
+          createForm(randomReplyID, this.parentNode);
+        }
+        this.style.display = "none";
+        document.querySelector("#input_" + randomReplyID).focus();
+      });
+    });
+  }
+
+  createForm(createRandomID(), document.getElementById("0"), true);
+</script>
