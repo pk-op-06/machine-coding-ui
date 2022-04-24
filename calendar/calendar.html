@@ -1,0 +1,235 @@
+<html>
+  <body>
+    <div class="inner-body">
+      <h1>Calendar</h1>
+      <div class="container">
+        <div class="actions">
+          <span class="navigate" id="prev" onclick="prev()"><<</span>
+          <span class="selectors">
+            <select id="year-selector" onchange="setYear(this.value)" name="year">
+            </select>
+            <select id="month-selector" onchange="setMonth(this.value)" name="month">
+            </select>
+          </span>
+          <span class="navigate" id="next" onclick="next()">>></span>
+        </div>
+        <div class="calendar">
+          <div id="headers"></div>
+          <div id="dates"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+
+  body {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    top: 10px;
+    background-color: #ededed;
+  }
+
+  .inner-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container {
+    border: 1px solid gray;
+    width: 500px;
+    display: flex;  
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 5px;
+    gap: 10px;
+    padding: 10px;
+    background-color: #FFF;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 10px;
+    padding: 0 15px;
+  }
+
+  .navigate {
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .selectors {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  select {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: transparent;
+  }
+
+  #headers, #dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  #headers > *, #dates > * {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .selected-date {
+    background-color: aqua;
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const sY = 1970;
+  const range = 99;
+  const eY = sY + range;
+
+  const currentDate = new Date();
+  const date = currentDate.toDateString().split(" ");
+  let cDate = date[2];
+  let cMonth = currentDate.getMonth();
+  let cYear = parseInt(date[3]);
+
+  // fill up dropdown for year
+  let frag = document.createDocumentFragment();
+  for(let i = 0; i < 100; i++) {
+    const option = document.createElement("option");
+    option.value = sY + i;
+    option.innerHTML = sY + i;
+    frag.appendChild(option);
+  }
+  document.getElementById("year-selector").appendChild(frag);
+  document.getElementById("year-selector").value = cYear;
+
+  // fill up dropdown for month
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Aug', 'Nov', 'Dec']
+  frag = document.createDocumentFragment();
+  for(let i = 0; i < months.length; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.innerHTML = months[i];
+    frag.appendChild(option);
+  }
+  document.getElementById("month-selector").appendChild(frag);
+  document.getElementById("month-selector").value = cMonth;
+
+  // fill up headers
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  frag = document.createDocumentFragment();
+  for(let i = 0; i < days.length; i++) {
+    const span = document.createElement('span');
+    span.innerHTML = days[i];
+    frag.appendChild(span);
+  } 
+  document.getElementById("headers").appendChild(frag);
+
+  function setYear(value) {
+    cYear = parseInt(value);
+    updateCalendar();
+  }
+
+  function setMonth(value) {
+    if (value == 12) {
+      value = 0;
+      cYear += 1;
+    }
+    if (value == -1) {
+      value = 11;
+      cYear -= 1;
+    }
+
+    if (cYear == sY && value == 0) {  // disable prev
+      document.getElementById("prev").classList.add('disabled');
+    } else if (cYear == eY && value == 11) { // disable next
+      document.getElementById("next").classList.add('disabled');
+    } else {
+      document.getElementById("next").classList.remove('disabled');
+      document.getElementById("prev").classList.remove('disabled');
+    }
+    cMonth = parseInt(value);
+    document.getElementById("month-selector").value = cMonth;
+    document.getElementById("year-selector").value = cYear;
+    updateCalendar();
+  }
+
+  function prev() {
+    document.getElementById("month-selector").value = cMonth - 1;
+    setMonth(cMonth - 1);
+  }
+
+  function next() {
+    document.getElementById("month-selector").value = cMonth + 1;
+    setMonth(cMonth + 1);
+  }
+
+  function getDaysForMonth() {
+    switch(cMonth) {
+      case 0:
+      case 2:
+      case 4:
+      case 6:
+      case 7:
+      case 9:
+      case 11:
+        return 31;
+      case 3:
+      case 5:
+      case 8:
+      case 10:
+        return 30;
+      case 1:
+        if (
+          cYear % 4 === 0 ?
+          cYear % 100 === 0 ? cYear % 400 === 0 ? true : false
+          : true : false) return 29;
+        return 28;
+    }
+  }
+
+  function updateCalendar() {
+    const d = (new Date(cYear, cMonth, 1, 0, 0, 0)).toDateString().split(" ");
+    const startIndex = days.indexOf(d[0]);
+
+    document.getElementById("dates").innerHTML = '';
+
+    // add empty elements till startIndex
+    frag = document.createDocumentFragment();
+    for (let i = 0; i < startIndex;i++) {
+      const span = document.createElement('span');
+      frag.appendChild(span); 
+    }
+
+    for (let i = 0; i < getDaysForMonth(); i++) {
+      const span = document.createElement('span');
+      span.innerHTML = i + 1;
+      if (i + 1 == cDate && currentDate.getMonth() == cMonth && date[3] == cYear) {
+        span.classList.add('selected-date');
+      }
+      frag.appendChild(span);
+    }
+
+    document.getElementById("dates").appendChild(frag);
+  }
+
+  updateCalendar();
+</script>
