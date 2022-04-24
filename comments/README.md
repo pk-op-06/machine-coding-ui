@@ -1,11 +1,11 @@
-#Structure
+# Structure
 ![Structure](./Structure.png)
 
-#Reply
+# Reply
 ![Reply](./Reply.png)
 
-#Edit
+# Edit
 ![Edit](./Edit.png)
 
-#Edited
+# Edited
 ![Edited](./Edited.png)
