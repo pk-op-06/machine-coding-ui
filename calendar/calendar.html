@@ -18,17 +18,45 @@
           <div id="dates"></div>
         </div>
       </div>
+      <div class="reminders-container">
+        <div class="head">
+          <span class="reminders-title">Reminders</span>
+          <span class="reminders-add-btn" onclick="openPopup()">+</span>
+        </div>
+        <div id="no-reminders">No Reminders set for the date.</div>
+        <div id="reminders">
+        </div>
+      </div>
     </div>
+
+    <div class="notes-popup">
+      <div class="notes-container">
+        <input id="popup-text" placeholder="Add Title"/>
+        <div class="popup-time">
+          <span id="currentDate">Tue, Apr 26</span>
+          <select id="startTime" name="startTime" onchange="setStartTime(this.value)"></select>
+          &nbsp;-&nbsp;<select name="endTime" id="endTime"></select>
+        </div>
+        <div class="popup-button-container">
+          <button class="save" onclick="saveRemindar()">Save</button>
+          <button class="cancel" onclick="closePopup()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <template id="temp-notes">
+      <div class="note">
+        <div class="text"></div>
+        <div class="time">
+          <span class="sTime"></span>&nbsp;-&nbsp;<span class="eTime"></span>
+        </div>
+      </div>
+    </template>
   </body>
 </html>
 
 <style>
-
   body {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    top: 10px;
     background-color: #ededed;
   }
 
@@ -36,6 +64,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
   }
 
   .container {
@@ -73,14 +102,42 @@
   }
 
   select {
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 15px;
+  }
+
+  select:hover {
+    background-color: #ededed;
+    cursor: pointer;
+  }
+
+  select > option {
+    background-color: transparent;
+  }
+
+  .select::selection {
+    background-color: DodgerBlue;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
   }
 
   #headers, #dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
   }
 
   #headers > *, #dates > * {
@@ -89,13 +146,167 @@
     padding: 16px;
   }
 
-  .selected-date {
+  .current-date {
     background-color: aqua;
+  }
+
+  .date-prop {
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all .4s ease-in-out;
+  }
+
+  .date-prop:hover, .date-selected, .reminders-add-btn:hover {
+    transform: scale(1.1);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
 
   .disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  .reminders-container {
+    display: flex;  
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 522px;
+    gap: 20px;
+  }
+
+  .reminders-container .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bolder;
+  }
+
+  .reminders-add-btn {
+    padding: 8px 14px;
+    border-radius: 50%;
+    background-color: aqua;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+
+  .reminders-add-btn:hover {
+    transform: scale(1.3);
+  }
+
+  #reminders {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .note {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    border-radius: 5px;
+    transition: all .3s ease-in-out;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+  .note:hover {
+    transform: scale(1.2);
+  }
+
+  .time {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  .sTime, .eTime {
+    padding: 5px 0;
+    border-radius: 2px;
+  }
+
+  .notes-popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    position: absolute;
+    top: -100%;
+    margin: 0 auto;
+    width: 100%;
+    transition: all .8s ease-in-out;
+  }
+
+  .display-popup {
+    top: 15%;
+  }
+  
+  .notes-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    width: 410px;
+    border-radius: 7px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    background-color: #FFF;
+  }
+
+  .popup-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .popup-button-container > button {
+    width: fit-content;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #FFF;
+    background-color: #3e86fa;
+    transition: all .2s ease-in-out;
+    font-weight: bold;
+  }
+
+  .popup-button-container > button:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transform: scale(1.1);
+  }
+
+  .popup-button-container .cancel {
+    background-color: darkgray;
+  }
+
+  #popup-text {
+    margin-top: 10px;
+    font-size: 20px;
+  }
+
+  .popup-time {
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding-inline: 5px;
+  }
+
+  input {
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid gray;
+    outline: none;
+    width: inherit;
   }
 </style>
 
@@ -103,6 +314,18 @@
   const sY = 1970;
   const range = 99;
   const eY = sY + range;
+  
+  /*
+  "2022-4-1" :[
+    {
+      start: "7:00am",
+      end: "8:00am",
+      message: 'Test message',
+      timestamp: '2022-3-11T14:12:000Z'
+    }
+  ]
+  */
+  const reminders = {};
 
   const currentDate = new Date();
   const date = currentDate.toDateString().split(" ");
@@ -222,14 +445,164 @@
     for (let i = 0; i < getDaysForMonth(); i++) {
       const span = document.createElement('span');
       span.innerHTML = i + 1;
-      if (i + 1 == cDate && currentDate.getMonth() == cMonth && date[3] == cYear) {
-        span.classList.add('selected-date');
+      if (i + 1 == date[2] && currentDate.getMonth() == cMonth && date[3] == cYear) {
+        span.classList.add('current-date');
       }
+      span.classList.add('date-prop');
+      span.addEventListener("click", function (e) {
+        // iterate over all spans and remove bgColor
+        const spans = document.getElementById("dates").childNodes;
+        for (let i = 0; i < spans.length; i++) {
+          let color = "#FFF";
+          if (
+            spans[i].innerHTML === date[2] &&
+            cMonth == currentDate.getMonth() &&
+            date[3] == cYear) color = "aqua";
+          spans[i].style.backgroundColor = color;
+          spans[i].style.color = "#000";
+          spans[i].classList.remove('date-selected');
+        }
+
+        this.classList.add('date-selected');
+        this.style.backgroundColor = "#3e86fa";
+        this.style.color = "#FFF";
+        cDate = this.innerHTML;
+        setCurrentDate();
+        populateReminders();
+      });
       frag.appendChild(span);
     }
 
     document.getElementById("dates").appendChild(frag);
+    populateReminders();
+    setCurrentDate();
   }
 
-  updateCalendar();
+  // popup
+  function setCurrentDate() {
+    const cD = (new Date(cYear, cMonth, cDate, 0, 0, 0)).toDateString().split(" ");
+    document.getElementById("currentDate").innerHTML = cD[0] + ", " + cD[1] + " " + cD[2];
+  }
+
+  function openPopup() {
+    document.getElementsByClassName("notes-popup")[0].classList.add('display-popup');
+    document.getElementsByClassName("inner-body")[0].style.pointerEvents = "none";
+  }
+
+  function closePopup() {
+    document.getElementsByClassName("notes-popup")[0].classList.remove('display-popup');
+    document.getElementsByClassName("inner-body")[0].style.pointerEvents = "auto";
+  }
+
+  // generate timings
+  const standards = ['am', 'pm'];
+  const intervals = ['00', '15', '30', '45'];
+  const time = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+
+  const timeArr = [];
+  standards.map((s) => {
+    time.map((t) => {
+      intervals.map((i) => {
+        timeArr.push(t + ":" + i + " "+ s);
+      })
+    })
+  })
+
+  function populateSelect(id, arr, start = 0) {
+    document.getElementById(id).innerHTML = "";
+
+    frag = document.createDocumentFragment();
+    for(let i = start; i < arr.length; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.innerHTML = arr[i];
+      frag.appendChild(option);
+    }
+    document.getElementById(id).appendChild(frag);
+  }
+
+  function setStartTime(value) {
+    populateSelect('endTime', timeArr, value);
+  }
+
+  function saveRemindar() {
+    const title = document.getElementById("popup-text").value;
+    if (!title) return;
+
+    document.getElementById("popup-text").value = "";
+    if (document.getElementById("no-reminders").style.display !== "none") {
+      document.getElementById("no-reminders").style.display = "none";
+    }
+
+    const sTime = timeArr[document.getElementById("startTime").value];
+    const eTime = timeArr[document.getElementById("endTime").value]
+    
+    document.getElementById("reminders").style.display = "flex";
+    addNewReminder(title, sTime, eTime);
+
+    const cID = [cYear, cMonth, cDate].join("-");
+    if (!reminders[cID]) reminders[cID] = [];
+    reminders[cID].push({
+      title,
+      sTime,
+      eTime,
+      time_stamp: new Date().toISOString(),
+    });
+
+    closePopup();
+  }
+
+  function addNewReminder(title, sTime, eTime) {
+    const rId = document.getElementById("reminders")
+
+    // create a new reminder from template
+    const nTemplate = document.querySelector("#temp-notes").content.querySelector(".note");
+    const reminder = nTemplate.cloneNode(true);
+
+    reminder.getElementsByClassName("text")[0].innerHTML = title;
+    reminder.getElementsByClassName("sTime")[0].innerHTML = sTime;
+    reminder.getElementsByClassName("eTime")[0].innerHTML = eTime;
+
+    rId.appendChild(reminder);
+  }
+
+  function populateReminders() {
+    // init with defaults
+    document.getElementById("no-reminders").style.display = "block";
+    document.getElementById("reminders").style.display = "none";
+    document.getElementById("reminders").innerHTML = "";
+    
+    const cID = [cYear, cMonth, cDate].join("-");
+    if (reminders[cID] && reminders[cID].length > 0) {
+      document.getElementById("no-reminders").style.display = "none";
+      document.getElementById("reminders").style.display = "flex";
+      
+      for (let i = 0; i < reminders[cID].length; i++) {
+        const { title, sTime, eTime } = reminders[cID][i];
+        addNewReminder(title, sTime, eTime);
+      }
+    } 
+  }
+
+  populateSelect('startTime', timeArr);
+  populateSelect('endTime', timeArr);
+
+  // dummy reminders
+  const cID = [cYear, cMonth, cDate].join("-");
+  reminders[cID] = [];
+  reminders[cID].push({
+    title: 'Lunch',
+    sTime: '1:30pm',
+    eTime: '2:30pm',
+    time_stamp: new Date().toISOString(),
+  });
+  reminders[cID].push({
+    title: 'KT',
+    sTime: '4:00pm',
+    eTime: '5:00pm',
+    time_stamp: new Date().toISOString(),
+  });
+
+  updateCalendar()
+
 </script>
