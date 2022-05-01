@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./snake.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form">
+        <input value="" placeholder="Enter no. of players" />
+        <button onclick="start()">Start</button>
+      </div>
+      <div class="players">
+        <div>No. of players</div>
+        <div class="coins"></div>
+      </div>
+
+      <div class="diceContainer">
+        Current Player<span id="currentCoin"></span>
+
+        <div>
+          <a class="roller" onclick="rollDice()">Roll dice</a>
+          <span id="number"></span>
+        </div>
+      </div>
+      <div class="sLContainer"></div>
+    </div>
+
+    <template id="temp-coin">
+      <div class="coin"></div>
+    </template>
+  </body>
+  <script src="./snake.js"></script>
+</html>

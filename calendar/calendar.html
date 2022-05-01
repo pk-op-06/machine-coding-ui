@@ -6,10 +6,16 @@
         <div class="actions">
           <span class="navigate" id="prev" onclick="prev()"><<</span>
           <span class="selectors">
-            <select id="year-selector" onchange="setYear(this.value)" name="year">
-            </select>
-            <select id="month-selector" onchange="setMonth(this.value)" name="month">
-            </select>
+            <select
+              id="year-selector"
+              onchange="setYear(this.value)"
+              name="year"
+            ></select>
+            <select
+              id="month-selector"
+              onchange="setMonth(this.value)"
+              name="month"
+            ></select>
           </span>
           <span class="navigate" id="next" onclick="next()">>></span>
         </div>
@@ -24,17 +30,20 @@
           <span class="reminders-add-btn" onclick="openPopup()">+</span>
         </div>
         <div id="no-reminders">No Reminders set for the date.</div>
-        <div id="reminders">
-        </div>
+        <div id="reminders"></div>
       </div>
     </div>
 
     <div class="notes-popup">
       <div class="notes-container">
-        <input id="popup-text" placeholder="Add Title"/>
+        <input id="popup-text" placeholder="Add Title" />
         <div class="popup-time">
           <span id="currentDate">Tue, Apr 26</span>
-          <select id="startTime" name="startTime" onchange="setStartTime(this.value)"></select>
+          <select
+            id="startTime"
+            name="startTime"
+            onchange="setStartTime(this.value)"
+          ></select>
           &nbsp;-&nbsp;<select name="endTime" id="endTime"></select>
         </div>
         <div class="popup-button-container">
@@ -70,13 +79,13 @@
   .container {
     border: 1px solid gray;
     width: 500px;
-    display: flex;  
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     border-radius: 5px;
     gap: 10px;
     padding: 10px;
-    background-color: #FFF;
+    background-color: #fff;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
 
@@ -131,16 +140,18 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     text-indent: 1px;
-    text-overflow: '';
+    text-overflow: "";
   }
 
-  #headers, #dates {
+  #headers,
+  #dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
   }
 
-  #headers > *, #dates > * {
+  #headers > *,
+  #dates > * {
     display: flex;
     justify-content: center;
     padding: 16px;
@@ -153,10 +164,12 @@
   .date-prop {
     cursor: pointer;
     border-radius: 5px;
-    transition: all .4s ease-in-out;
+    transition: all 0.4s ease-in-out;
   }
 
-  .date-prop:hover, .date-selected, .reminders-add-btn:hover {
+  .date-prop:hover,
+  .date-selected,
+  .reminders-add-btn:hover {
     transform: scale(1.1);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
@@ -167,7 +180,7 @@
   }
 
   .reminders-container {
-    display: flex;  
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     width: 522px;
@@ -187,7 +200,7 @@
     border-radius: 50%;
     background-color: aqua;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
     margin-right: 10px;
   }
@@ -210,7 +223,7 @@
     justify-content: flex-start;
     gap: 10px;
     border-radius: 5px;
-    transition: all .3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
 
@@ -224,7 +237,8 @@
     gap: 5px;
   }
 
-  .sTime, .eTime {
+  .sTime,
+  .eTime {
     padding: 5px 0;
     border-radius: 2px;
   }
@@ -238,13 +252,13 @@
     top: -100%;
     margin: 0 auto;
     width: 100%;
-    transition: all .8s ease-in-out;
+    transition: all 0.8s ease-in-out;
   }
 
   .display-popup {
     top: 15%;
   }
-  
+
   .notes-container {
     display: flex;
     flex-direction: column;
@@ -252,8 +266,9 @@
     gap: 20px;
     width: 410px;
     border-radius: 7px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
-    background-color: #FFF;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    background-color: #fff;
   }
 
   .popup-button-container {
@@ -271,9 +286,9 @@
     border-radius: 4px;
     text-transform: uppercase;
     cursor: pointer;
-    color: #FFF;
+    color: #fff;
     background-color: #3e86fa;
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     font-weight: bold;
   }
 
@@ -314,7 +329,7 @@
   const sY = 1970;
   const range = 99;
   const eY = sY + range;
-  
+
   /*
   "2022-4-1" :[
     {
@@ -335,7 +350,7 @@
 
   // fill up dropdown for year
   let frag = document.createDocumentFragment();
-  for(let i = 0; i < 100; i++) {
+  for (let i = 0; i < 100; i++) {
     const option = document.createElement("option");
     option.value = sY + i;
     option.innerHTML = sY + i;
@@ -345,9 +360,22 @@
   document.getElementById("year-selector").value = cYear;
 
   // fill up dropdown for month
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Aug', 'Nov', 'Dec']
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Aug",
+    "Nov",
+    "Dec",
+  ];
   frag = document.createDocumentFragment();
-  for(let i = 0; i < months.length; i++) {
+  for (let i = 0; i < months.length; i++) {
     const option = document.createElement("option");
     option.value = i;
     option.innerHTML = months[i];
@@ -357,13 +385,13 @@
   document.getElementById("month-selector").value = cMonth;
 
   // fill up headers
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   frag = document.createDocumentFragment();
-  for(let i = 0; i < days.length; i++) {
-    const span = document.createElement('span');
+  for (let i = 0; i < days.length; i++) {
+    const span = document.createElement("span");
     span.innerHTML = days[i];
     frag.appendChild(span);
-  } 
+  }
   document.getElementById("headers").appendChild(frag);
 
   function setYear(value) {
@@ -381,13 +409,15 @@
       cYear -= 1;
     }
 
-    if (cYear == sY && value == 0) {  // disable prev
-      document.getElementById("prev").classList.add('disabled');
-    } else if (cYear == eY && value == 11) { // disable next
-      document.getElementById("next").classList.add('disabled');
+    if (cYear == sY && value == 0) {
+      // disable prev
+      document.getElementById("prev").classList.add("disabled");
+    } else if (cYear == eY && value == 11) {
+      // disable next
+      document.getElementById("next").classList.add("disabled");
     } else {
-      document.getElementById("next").classList.remove('disabled');
-      document.getElementById("prev").classList.remove('disabled');
+      document.getElementById("next").classList.remove("disabled");
+      document.getElementById("prev").classList.remove("disabled");
     }
     cMonth = parseInt(value);
     document.getElementById("month-selector").value = cMonth;
@@ -406,7 +436,7 @@
   }
 
   function getDaysForMonth() {
-    switch(cMonth) {
+    switch (cMonth) {
       case 0:
       case 2:
       case 4:
@@ -422,33 +452,43 @@
         return 30;
       case 1:
         if (
-          cYear % 4 === 0 ?
-          cYear % 100 === 0 ? cYear % 400 === 0 ? true : false
-          : true : false) return 29;
+          cYear % 4 === 0
+            ? cYear % 100 === 0
+              ? cYear % 400 === 0
+                ? true
+                : false
+              : true
+            : false
+        )
+          return 29;
         return 28;
     }
   }
 
   function updateCalendar() {
-    const d = (new Date(cYear, cMonth, 1, 0, 0, 0)).toDateString().split(" ");
+    const d = new Date(cYear, cMonth, 1, 0, 0, 0).toDateString().split(" ");
     const startIndex = days.indexOf(d[0]);
 
-    document.getElementById("dates").innerHTML = '';
+    document.getElementById("dates").innerHTML = "";
 
     // add empty elements till startIndex
     frag = document.createDocumentFragment();
-    for (let i = 0; i < startIndex;i++) {
-      const span = document.createElement('span');
-      frag.appendChild(span); 
+    for (let i = 0; i < startIndex; i++) {
+      const span = document.createElement("span");
+      frag.appendChild(span);
     }
 
     for (let i = 0; i < getDaysForMonth(); i++) {
-      const span = document.createElement('span');
+      const span = document.createElement("span");
       span.innerHTML = i + 1;
-      if (i + 1 == date[2] && currentDate.getMonth() == cMonth && date[3] == cYear) {
-        span.classList.add('current-date');
+      if (
+        i + 1 == date[2] &&
+        currentDate.getMonth() == cMonth &&
+        date[3] == cYear
+      ) {
+        span.classList.add("current-date");
       }
-      span.classList.add('date-prop');
+      span.classList.add("date-prop");
       span.addEventListener("click", function (e) {
         // iterate over all spans and remove bgColor
         const spans = document.getElementById("dates").childNodes;
@@ -457,13 +497,15 @@
           if (
             spans[i].innerHTML === date[2] &&
             cMonth == currentDate.getMonth() &&
-            date[3] == cYear) color = "aqua";
+            date[3] == cYear
+          )
+            color = "aqua";
           spans[i].style.backgroundColor = color;
           spans[i].style.color = "#000";
-          spans[i].classList.remove('date-selected');
+          spans[i].classList.remove("date-selected");
         }
 
-        this.classList.add('date-selected');
+        this.classList.add("date-selected");
         this.style.backgroundColor = "#3e86fa";
         this.style.color = "#FFF";
         cDate = this.innerHTML;
@@ -480,39 +522,48 @@
 
   // popup
   function setCurrentDate() {
-    const cD = (new Date(cYear, cMonth, cDate, 0, 0, 0)).toDateString().split(" ");
-    document.getElementById("currentDate").innerHTML = cD[0] + ", " + cD[1] + " " + cD[2];
+    const cD = new Date(cYear, cMonth, cDate, 0, 0, 0)
+      .toDateString()
+      .split(" ");
+    document.getElementById("currentDate").innerHTML =
+      cD[0] + ", " + cD[1] + " " + cD[2];
   }
 
   function openPopup() {
-    document.getElementsByClassName("notes-popup")[0].classList.add('display-popup');
-    document.getElementsByClassName("inner-body")[0].style.pointerEvents = "none";
+    document
+      .getElementsByClassName("notes-popup")[0]
+      .classList.add("display-popup");
+    document.getElementsByClassName("inner-body")[0].style.pointerEvents =
+      "none";
   }
 
   function closePopup() {
-    document.getElementsByClassName("notes-popup")[0].classList.remove('display-popup');
-    document.getElementsByClassName("inner-body")[0].style.pointerEvents = "auto";
+    document
+      .getElementsByClassName("notes-popup")[0]
+      .classList.remove("display-popup");
+    document.getElementsByClassName("inner-body")[0].style.pointerEvents =
+      "auto";
   }
 
   // generate timings
-  const standards = ['am', 'pm'];
-  const intervals = ['00', '15', '30', '45'];
-  const time = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+  const standards = ["am", "pm"];
+  const intervals = ["00", "15", "30", "45"];
+  const time = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
 
   const timeArr = [];
   standards.map((s) => {
     time.map((t) => {
       intervals.map((i) => {
-        timeArr.push(t + ":" + i + " "+ s);
-      })
-    })
-  })
+        timeArr.push(t + ":" + i + " " + s);
+      });
+    });
+  });
 
   function populateSelect(id, arr, start = 0) {
     document.getElementById(id).innerHTML = "";
 
     frag = document.createDocumentFragment();
-    for(let i = start; i < arr.length; i++) {
+    for (let i = start; i < arr.length; i++) {
       const option = document.createElement("option");
       option.value = i;
       option.innerHTML = arr[i];
@@ -522,7 +573,7 @@
   }
 
   function setStartTime(value) {
-    populateSelect('endTime', timeArr, value);
+    populateSelect("endTime", timeArr, value);
   }
 
   function saveRemindar() {
@@ -535,8 +586,8 @@
     }
 
     const sTime = timeArr[document.getElementById("startTime").value];
-    const eTime = timeArr[document.getElementById("endTime").value]
-    
+    const eTime = timeArr[document.getElementById("endTime").value];
+
     document.getElementById("reminders").style.display = "flex";
     addNewReminder(title, sTime, eTime);
 
@@ -553,10 +604,12 @@
   }
 
   function addNewReminder(title, sTime, eTime) {
-    const rId = document.getElementById("reminders")
+    const rId = document.getElementById("reminders");
 
     // create a new reminder from template
-    const nTemplate = document.querySelector("#temp-notes").content.querySelector(".note");
+    const nTemplate = document
+      .querySelector("#temp-notes")
+      .content.querySelector(".note");
     const reminder = nTemplate.cloneNode(true);
 
     reminder.getElementsByClassName("text")[0].innerHTML = title;
@@ -571,38 +624,37 @@
     document.getElementById("no-reminders").style.display = "block";
     document.getElementById("reminders").style.display = "none";
     document.getElementById("reminders").innerHTML = "";
-    
+
     const cID = [cYear, cMonth, cDate].join("-");
     if (reminders[cID] && reminders[cID].length > 0) {
       document.getElementById("no-reminders").style.display = "none";
       document.getElementById("reminders").style.display = "flex";
-      
+
       for (let i = 0; i < reminders[cID].length; i++) {
         const { title, sTime, eTime } = reminders[cID][i];
         addNewReminder(title, sTime, eTime);
       }
-    } 
+    }
   }
 
-  populateSelect('startTime', timeArr);
-  populateSelect('endTime', timeArr);
+  populateSelect("startTime", timeArr);
+  populateSelect("endTime", timeArr);
 
   // dummy reminders
   const cID = [cYear, cMonth, cDate].join("-");
   reminders[cID] = [];
   reminders[cID].push({
-    title: 'Lunch',
-    sTime: '1:30pm',
-    eTime: '2:30pm',
+    title: "Lunch",
+    sTime: "1:30pm",
+    eTime: "2:30pm",
     time_stamp: new Date().toISOString(),
   });
   reminders[cID].push({
-    title: 'KT',
-    sTime: '4:00pm',
-    eTime: '5:00pm',
+    title: "KT",
+    sTime: "4:00pm",
+    eTime: "5:00pm",
     time_stamp: new Date().toISOString(),
   });
 
-  updateCalendar()
-
+  updateCalendar();
 </script>
