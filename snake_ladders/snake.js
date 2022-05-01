@@ -261,8 +261,6 @@ function createLadders() {
     }
   }
 
-  console.log(ladders);
-
   ladders.forEach((ld) => {
     connect(
       document.getElementById("item_" + ld[0]),
@@ -272,7 +270,7 @@ function createLadders() {
   });
 }
 
-function connect(div1, div2, draw = false, color = "black", thickness = 2) {
+function connect(div1, div2, draw = false, color = "blue", thickness = 2) {
   // draw a line connecting elements
   var off1 = getOffset(div1);
   var off2 = getOffset(div2);
